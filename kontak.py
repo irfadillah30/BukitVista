@@ -7,6 +7,6 @@ def kontak():
     
     - **Email:** [irfadillahafninurvita@gmail.com](irfadillahafninurvita@gmail.com)
     - **LinkedIn:** [Profil LinkedIn Saya](https://www.linkedin.com/in/irfadilahafninurvita/)
-    - **GitHub:** [Profil GitHub Saya](https://github)
+    - **GitHub:** [Profil GitHub Saya](https://github.com/irfadillah30/BukitVista)
     - **Whatsapp:** [0821-2397-0898](https://wa.me/6281239708989)
     """)
