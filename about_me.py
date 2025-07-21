@@ -8,5 +8,5 @@ def about_me():
 
     Dalam bootcamp data science yang saya ikuti, saya mempelajari berbagai teknik, termasuk pengolahan data, machine learning, visualisasi data, analisis industri, modeling data, data clustering, big data, pemrograman statistik, serta feature engineering dan evaluasi model.
 
-    Mari terkoneksi dengan akun saya di [LinkedIn](https://www.linkedin.com/in/irfadilahafninurvita/) Atau [GitHub](https://github.com/irfadillah30/BukitVista).
+    Mari terkoneksi dengan akun saya di [LinkedIn](https://www.linkedin.com/in/irfadillahafninurvita05/) Atau [GitHub](https://github.com/irfadillah30/BukitVista).
     """)
