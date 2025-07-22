@@ -12,7 +12,7 @@ def prediction():
     st.title('Prediksi Harga Vila di Bali')
 
     data, location_encoder = load_data()
-    model, X_test, y_test, X = train_model(data)
+    model, X_test, y_test, X = train_model()
 
     st.header('Input Fitur')
     guests = st.slider('Jumlah Tamu', 1, 16, 2)
