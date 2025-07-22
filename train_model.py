@@ -13,7 +13,6 @@ def train_model():
     # Isi nilai kosong dengan rata-rata kolom
     for col in ['Jumlah Tamu', 'Jumlah Kamar Tidur', 'Jumlah Tempat Tidur', 'Harga']:
         data[col].fillna(data[col].mean(), inplace=True)
-    data['Lokasi Encoded'] = location_encoder.transform(data['Lokasi'])
 
     # Fitur dan target
     X = data[['Jumlah Tamu', 'Jumlah Kamar Tidur', 'Jumlah Tempat Tidur', 'Lokasi Encoded']]
