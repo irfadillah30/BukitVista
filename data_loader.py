@@ -15,4 +15,15 @@ def load_data(path='Daftar_vila_Dibali_Bukit_Vista_Cleaned.csv'):
     data['Lokasi Encoded'] = le.fit_transform(data['Lokasi'])
     lokasi_list = sorted(data['Lokasi'].unique())
 
+    #  Bersihkan Harga dari simbol mata uang
+    data['Harga'] = (
+    data['Harga']
+    .astype(str)
+    .str.replace(r'[¥¥,\s]', '', regex=True)
+    .str.replace('.', '', regex=False)
+    .astype(float)
+    )
+    data['Harga'] = data['Harga'].fillna(data['Harga'].median()).astype(int)
+
+
     return data, le, lokasi_list

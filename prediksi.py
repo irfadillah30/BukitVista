@@ -18,10 +18,13 @@ def prediction():
     prediksi_harga = model.predict(input_data)
 
     st.subheader('💰 Prediksi Harga')
-    st.success(f'Rp {int(round(prediksi_harga[0])):,}')
+    harga_formatted = f"¥{int(round(prediksi_harga[0])):,}".replace(",", ".")
+    st.success(harga_formatted)
+
+
 
     y_pred = model.predict(X_test)
-    rmse = mean_squared_error(y_test, y_pred, squared=False)
+    rmse = np.sqrt(mean_squared_error(y_test, y_pred))
     r2 = r2_score(y_test, y_pred)
 
     st.subheader('📊 Skor Evaluasi')
