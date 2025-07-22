@@ -7,11 +7,9 @@ from sklearn.metrics import mean_squared_error, r2_score
 def prediction():
     st.title('Prediksi Harga Vila di Bali')
 
-    # Load data dan model
     data, location_encoder, lokasi_list = load_data()
     model, X_test, y_test, X = train_model()
 
-    # Input fitur
     guests = st.slider('Jumlah Tamu', 1, 16, 2)
     bedrooms = st.slider('Jumlah Kamar Tidur', 1, 10, 1)
     beds = st.slider('Jumlah Tempat Tidur', 1, 15, 1)
@@ -20,18 +18,15 @@ def prediction():
 
     input_data = np.array([[guests, bedrooms, beds, lokasi_encoded]])
 
-    # Prediksi harga
     prediksi_harga = model.predict(input_data)
 
-    # Tampilkan hasil
-    st.subheader('💰 Prediksi Harga')
+    st.subheader('Prediksi Harga')
     st.success(f'Rp {int(round(prediksi_harga[0])):,}')
 
-    # Evaluasi model
     y_pred = model.predict(X_test)
     rmse = np.sqrt(mean_squared_error(y_test, y_pred))
     r2 = r2_score(y_test, y_pred)
 
-    st.subheader('📊 Skor Evaluasi')
+    st.subheader('Skor Evaluasi')
     st.write(f'RMSE: {rmse:,.2f}')
     st.write(f'R-squared: {r2:.2f}')
