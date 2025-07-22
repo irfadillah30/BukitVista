@@ -11,6 +11,7 @@ from train_model import train_model
 def prediction():
     st.title('Prediksi Harga Vila di Bali')
 
+    # Load data dan model
     data, location_encoder = load_data()
     model, X_test, y_test, X = train_model()
 
@@ -21,13 +22,16 @@ def prediction():
     location = st.selectbox('Lokasi', location_encoder.classes_)
     location_encoded = location_encoder.transform([location])[0]
 
-    input_data = [[guests, bedrooms, beds, location_encoded]]
+    # Buat input data bentuk array 2D
+    input_data = np.array([[guests, bedrooms, beds, location_encoded]])
+
+    # Prediksi harga vila
     prediction = model.predict(input_data)
 
     st.subheader('Hasil Prediksi')
     st.success(f'￥{int(round(prediction[0])):,}')
 
-
+    # Evaluasi model
     y_pred = model.predict(X_test)
     rmse = np.sqrt(mean_squared_error(y_test, y_pred))
     r2 = r2_score(y_test, y_pred)
@@ -36,12 +40,20 @@ def prediction():
     st.write(f'RMSE: {rmse:,.2f}')
     st.write(f'R-squared: {r2:.2f}')
 
-    st.subheader('Pentingnya Fitur')
-    feature_importance = pd.DataFrame({
-        'Fitur': X.columns,
-        'Importance': model.feature_importances_
-    }).sort_values('Importance', ascending=False)
+    # Visualisasi feature importance
+    if hasattr(model, 'feature_importances_'):
+        st.subheader('Pentingnya Fitur')
 
-    fig, ax = plt.subplots()
-    sns.barplot(x='Importance', y='Fitur', data=feature_importance, ax=ax)
-    st.pyplot(fig)
+        fitur = X.columns if isinstance(X, pd.DataFrame) else ['Jumlah Tamu', 'Jumlah Kamar Tidur', 'Jumlah Tempat Tidur', 'Lokasi']
+
+        feature_importance = pd.DataFrame({
+            'Fitur': fitur,
+            'Importance': model.feature_importances_
+        }).sort_values('Importance', ascending=False)
+
+        fig, ax = plt.subplots(figsize=(8, 4))
+        sns.barplot(x='Importance', y='Fitur', data=feature_importance, ax=ax)
+        ax.set_title('Feature Importance')
+        st.pyplot(fig)
+    else:
+        st.write('Model tidak memiliki atribut feature_importances_ untuk menampilkan pentingnya fitur.')
