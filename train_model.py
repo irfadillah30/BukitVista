@@ -2,7 +2,7 @@ import joblib
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import mean_squared_error, r2_score
-
+from math import sqrt
 from data_loader import load_data  
 
 def train_model():
@@ -22,7 +22,8 @@ def train_model():
 
     # Evaluasi
     y_pred = model.predict(X_test)
-    rmse = mean_squared_error(y_test, y_pred, squared=False)
+    mse = mean_squared_error(y_test, y_pred)
+    rmse = sqrt(mse)
     r2 = r2_score(y_test, y_pred)
 
     print("✅ Model dan encoder disimpan.")
