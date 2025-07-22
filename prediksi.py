@@ -15,6 +15,10 @@ def prediction():
     data, location_encoder = load_data()
     model, X_test, y_test, X = train_model()
 
+    if model is None:
+        st.error("Model belum tersedia karena error saat training.")
+        return
+
     st.header('Input Fitur')
     guests = st.slider('Jumlah Tamu', 1, 16, 2)
     bedrooms = st.slider('Jumlah Kamar Tidur', 1, 10, 1)
