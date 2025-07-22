@@ -3,22 +3,27 @@ from sklearn.preprocessing import LabelEncoder
 from utils import extract_facilities
 
 def load_data(path='Daftar_vila_Dibali_Bukit_Vista_Cleaned.csv'):
+    # Load data
     data = pd.read_csv(path)
+    
+    # Menghapus simbol "¥" dan titik, lalu konversi ke angka
+    data['Harga'] = data['Harga'].astype(str)
+    data['Harga'] = data['Harga'].str.replace('¥', '', regex=False).str.replace('.', '', regex=False).str.strip()
 
-    # Drop data yang kolom pentingnya kosong
-    data = data.dropna(subset=['Fasilitas', 'Lokasi', 'Harga'])
-
-    # Ekstrak fasilitas ke dalam kolom-kolom numerik
+    # Isi NaN dengan median sebelum konversi ke int
+    data['Harga'] = data['Harga'].replace('', np.nan)
+    data['Harga'] = data['Harga'].astype(float)
+    median_harga = data['Harga'].median()
+    data['Harga'] = data['Harga'].fillna(median_harga).astype(int)
+    
+    # Ekstrak fasilitas
     facilities = data['Fasilitas'].apply(extract_facilities)
-
-    data['Jumlah Tamu'] = facilities.apply(lambda x: x[0] if x and len(x) > 0 else 0)
-    data['Jumlah Kamar Tidur'] = facilities.apply(lambda x: x[1] if x and len(x) > 1 else 0)
-    data['Jumlah Tempat Tidur'] = facilities.apply(lambda x: x[2] if x and len(x) > 2 else 0)
-
-
-    # Encode lokasi jadi angka (untuk model)
-    lokasi_list = sorted(data['Lokasi'].unique())
+    data['Jumlah_Tamu'] = data['Fasilitas'].str.extract(r'(\d+)\s*tamu').astype(float)
+    data['Jumlah_Kamar'] = data['Fasilitas'].str.extract(r'(\d+)\s*kamar tidur').astype(float)
+    data['Jumlah_Tempat_Tidur'] = data['Fasilitas'].str.extract(r'(\d+)\s*tempat tidur').astype(float)
+    
+    # Encode lokasi
     le = LabelEncoder()
-    data['Lokasi Encoded'] = le.fit_transform(data['Lokasi'])
-
-    return data, le, lokasi_list
+    data['Lokasi_Encoded'] = le.fit_transform(data['Lokasi'])
+    
+    return data, le, le.classes_.tolist()
