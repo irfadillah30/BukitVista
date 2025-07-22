@@ -1,31 +1,39 @@
 import streamlit as st
+import joblib
+import pandas as pd
 import numpy as np
-from data_loader import load_data
-from train_model import train_model
 from sklearn.metrics import mean_squared_error, r2_score
 
 def prediction():
-    st.title('Prediksi Harga Vila di Bali')
-
-    data, location_encoder, lokasi_list = load_data()
-    model, X_test, y_test, X = train_model()
-
-    guests = st.slider('Jumlah Tamu', 1, 16, 2)
-    bedrooms = st.slider('Jumlah Kamar Tidur', 1, 10, 1)
-    beds = st.slider('Jumlah Tempat Tidur', 1, 15, 1)
-    lokasi = st.selectbox('Lokasi', lokasi_list)
-    lokasi_encoded = location_encoder.transform([lokasi])[0]
-
-    input_data = np.array([[guests, bedrooms, beds, lokasi_encoded]])
-    prediksi_harga = model.predict(input_data)
-
-    st.subheader('Prediksi Harga')
-    st.success(f'¥ {int(round(prediksi_harga[0])):,}')
-
+    st.title("PREDIKSI HARGA VILA")
+    
+    # Load model dan data test
+    model = joblib.load('model_regresi.pkl')
+    le = joblib.load('location_encoder.pkl')
+    X_test = joblib.load('X_test.pkl')
+    y_test = joblib.load('y_test.pkl')
+    
+    # Hitung metrik
     y_pred = model.predict(X_test)
     rmse = np.sqrt(mean_squared_error(y_test, y_pred))
     r2 = r2_score(y_test, y_pred)
-
-    st.subheader('Skor Evaluasi')
-    st.write(f'RMSE: {rmse:,.2f}')
-    st.write(f'R-squared: {r2:.2f}')
+    
+    # Input form
+    st.header("Input Data Vila")
+    tamu = st.number_input("JUMLAH TAMU", min_value=1, value=2)
+    kamar = st.number_input("JUMLAH KAMAR TIDUR", min_value=1, value=1)
+    tempat_tidur = st.number_input("JUMLAH TEMPAT TIDUR", min_value=1, value=1)
+    lokasi = st.selectbox("LOKASI", options=le.classes_)
+    
+    if st.button("PREDIKSI"):
+        # Encode lokasi
+        lokasi_encoded = le.transform([lokasi])[0]
+        
+        # Predict
+        input_data = [[tamu, kamar, tempat_tidur, lokasi_encoded]]
+        harga_pred = model.predict(input_data)[0]
+        
+        # Tampilkan hasil
+        st.success(f"**HARGA PREDIKSI:** ¥ {harga_pred:,.0f}".replace(",", "."))
+        st.write(f"**RMSE:** {rmse:,.0f}")
+        st.write(f"**R²:** {r2:.3f}")

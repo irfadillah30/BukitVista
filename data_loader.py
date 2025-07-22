@@ -6,24 +6,22 @@ def load_data(path='Daftar_vila_Dibali_Bukit_Vista_Cleaned.csv'):
     # Load data
     data = pd.read_csv(path)
     
-    # Menghapus simbol "¥" dan titik, lalu konversi ke angka
-    data['Harga'] = data['Harga'].astype(str)
-    data['Harga'] = data['Harga'].str.replace('¥', '', regex=False).str.replace('.', '', regex=False).str.strip()
-
-    # Isi NaN dengan median sebelum konversi ke int
-    data['Harga'] = data['Harga'].replace('', np.nan)
-    data['Harga'] = data['Harga'].astype(float)
-    median_harga = data['Harga'].median()
-    data['Harga'] = data['Harga'].fillna(median_harga).astype(int)
+    # Bersihkan harga
+    data['Harga'] = data['Harga'].str.replace('¥', '').str.replace('.', '').str.strip()
+    data['Harga'] = pd.to_numeric(data['Harga'], errors='coerce')
+    
+    # Isi missing values dengan rata-rata
+    data['Harga'] = data['Harga'].fillna(data['Harga'].mean())
     
     # Ekstrak fasilitas
-    facilities = data['Fasilitas'].apply(extract_facilities)
-    data['Jumlah_Tamu'] = data['Fasilitas'].str.extract(r'(\d+)\s*tamu').astype(float)
-    data['Jumlah_Kamar'] = data['Fasilitas'].str.extract(r'(\d+)\s*kamar tidur').astype(float)
-    data['Jumlah_Tempat_Tidur'] = data['Fasilitas'].str.extract(r'(\d+)\s*tempat tidur').astype(float)
+    facilities = data['Fasilitas'].apply(lambda x: extract_facilities(x) if pd.notnull(x) else (1, 1, 1))  # Default 1 jika kosong
+    data['Jumlah Tamu'] = [f[0] for f in facilities]
+    data['Jumlah Kamar Tidur'] = [f[1] for f in facilities]
+    data['Jumlah Tempat Tidur'] = [f[2] for f in facilities]
     
     # Encode lokasi
     le = LabelEncoder()
-    data['Lokasi_Encoded'] = le.fit_transform(data['Lokasi'])
+    data['Lokasi'] = data['Lokasi'].fillna('Unknown')
+    data['Lokasi Encoded'] = le.fit_transform(data['Lokasi'])
     
     return data, le, le.classes_.tolist()
