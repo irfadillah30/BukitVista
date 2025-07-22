@@ -10,7 +10,6 @@ def prediction():
     data, location_encoder, lokasi_list = load_data()
     model, X_test, y_test, X = train_model()
 
-
     guests = st.slider('Jumlah Tamu', 1, 16, 2)
     bedrooms = st.slider('Jumlah Kamar Tidur', 1, 10, 1)
     beds = st.slider('Jumlah Tempat Tidur', 1, 15, 1)
