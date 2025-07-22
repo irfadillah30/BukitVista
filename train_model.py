@@ -3,10 +3,14 @@ from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import mean_squared_error, r2_score
 from math import sqrt
-from data_loader import load_data  
+from data_loader import load_data
+
 
 def train_model():
     data, location_encoder = load_data()
+
+    # Tangani missing values di fitur dan target
+    data = data.dropna(subset=['Jumlah Tamu', 'Jumlah Kamar Tidur', 'Jumlah Tempat Tidur', 'Lokasi Encoded', 'Harga'])
 
     X = data[['Jumlah Tamu', 'Jumlah Kamar Tidur', 'Jumlah Tempat Tidur', 'Lokasi Encoded']]
     y = data['Harga']
@@ -31,6 +35,7 @@ def train_model():
     print(f"🔍 R² Score: {r2:.2f}")
 
     return model, X_test, y_test, X
+
 
 if __name__ == '__main__':
     train_model()
