@@ -1,14 +1,12 @@
 import re
 
 def extract_facilities(facility_str):
-    jumlah_tamu = re.search(r'(\d+)\s+tamu', facility_str)
-    jumlah_kamar_tidur = re.search(r'(\d+)\s+kamar tidur', facility_str)
-    jumlah_tempat_tidur = re.search(r'(\d+)\s+tempat tidur', facility_str)
-
+    tamu = re.search(r'(\d+)\s+tamu', facility_str)
+    kamar_tidur = re.search(r'(\d+)\s+kamar tidur', facility_str)
+    tempat_tidur = re.search(r'(\d+)\s+tempat tidur', facility_str)
 
     return [
-        int(jumlah_tamu.group(1)) if jumlah_tamu else 0,
-        int(jumlah_kamar_tidur.group(1)) if jumlah_kamar_tidur else 0,
-        int(jumlah_tempat_tidur.group(1)) if jumlah_tempat_tidur else 0,
+        int(tamu.group(1)) if tamu else 0,
+        int(kamar_tidur.group(1)) if kamar_tidur else 0,
+        int(tempat_tidur.group(1)) if tempat_tidur else 0
     ]
-

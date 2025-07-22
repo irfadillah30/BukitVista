@@ -1,25 +1,29 @@
 import streamlit as st
-import joblib
-import pandas as pd
-import os
+import numpy as np
 from train_model import train_model
+from sklearn.metrics import mean_squared_error, r2_score
 
 def prediction():
-    st.title("PREDIKSI HARGA VILA")
-    
-    
-    # Load model dan data
-    model = joblib.load('model_regresi.pkl')
-    le = joblib.load('location_encoder.pkl')
-    
-    # Input form
-    tamu = st.number_input("JUMLAH TAMU", min_value=1, value=2)
-    kamar = st.number_input("JUMLAH KAMAR TIDUR", min_value=1, value=1)
-    tempat_tidur = st.number_input("JUMLAH TEMPAT TIDUR", min_value=1, value=1)
-    lokasi = st.selectbox("LOKASI", options=le.classes_)
-    
-    if st.button("PREDIKSI"):
-        lokasi_encoded = le.transform([lokasi])[0]
-        input_data = [[tamu, kamar, tempat_tidur, lokasi_encoded]]
-        harga_pred = model.predict(input_data)[0]
-        st.success(f"HARGA PREDIKSI: ¥ {harga_pred:,.0f}".replace(",", "."))
+    st.title('Prediksi Harga Vila di Bali')
+
+    model, X_test, y_test, le, lokasi_list = train_model()
+
+    guests = st.slider('Jumlah Tamu', 1, 16, 2)
+    bedrooms = st.slider('Jumlah Kamar Tidur', 1, 10, 1)
+    beds = st.slider('Jumlah Tempat Tidur', 1, 15, 1)
+    lokasi = st.selectbox('Lokasi', lokasi_list)
+    lokasi_encoded = le.transform([lokasi])[0]
+
+    input_data = np.array([[guests, bedrooms, beds, lokasi_encoded]])
+    prediksi_harga = model.predict(input_data)
+
+    st.subheader('💰 Prediksi Harga')
+    st.success(f'Rp {int(round(prediksi_harga[0])):,}')
+
+    y_pred = model.predict(X_test)
+    rmse = mean_squared_error(y_test, y_pred, squared=False)
+    r2 = r2_score(y_test, y_pred)
+
+    st.subheader('📊 Skor Evaluasi')
+    st.write(f'RMSE: {rmse:,.2f}')
+    st.write(f'R²: {r2:.2f}')
