@@ -18,9 +18,7 @@ def train_model():
         'Harga'
     ])
 
-    if len(data_clean) < 10:
-        return None, None, None, None
-
+    # langsung training tanpa cek jumlah data
     X = data_clean[['Jumlah Tamu', 'Jumlah Kamar Tidur', 'Jumlah Tempat Tidur', 'Lokasi Encoded']]
     y = data_clean['Harga']
 
@@ -36,3 +34,4 @@ def train_model():
     joblib.dump(location_encoder, 'location_encoder.pkl')
 
     return model, X_test, y_test, X
+

@@ -20,7 +20,7 @@ def prediction():
     prediksi_harga = model.predict(input_data)
 
     st.subheader('Prediksi Harga')
-    st.success(f'Rp {int(round(prediksi_harga[0])):,}')
+    st.success(f'¥ {int(round(prediksi_harga[0])):,}')
 
     y_pred = model.predict(X_test)
     rmse = np.sqrt(mean_squared_error(y_test, y_pred))
