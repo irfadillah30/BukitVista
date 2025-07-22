@@ -19,10 +19,11 @@ def load_data(path='Daftar_vila_Dibali_Bukit_Vista_Cleaned.csv'):
     data['Harga'] = (
     data['Harga']
     .astype(str)
-    .str.replace(r'[¥¥,\s]', '', regex=True)
-    .str.replace('.', '', regex=False)
+    .str.replace(r'[¥¥,\s]', '', regex=True)  
+    .str.replace('.', '', regex=False)        
     .astype(float)
     )
+
     data['Harga'] = data['Harga'].fillna(data['Harga'].median()).astype(int)
 
 

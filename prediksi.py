@@ -2,6 +2,7 @@ import streamlit as st
 import numpy as np
 from train_model import train_model
 from sklearn.metrics import mean_squared_error, r2_score
+from math import sqrt
 
 def prediction():
     st.title('Prediksi Harga Vila di Bali')
@@ -24,7 +25,7 @@ def prediction():
 
 
     y_pred = model.predict(X_test)
-    rmse = np.sqrt(mean_squared_error(y_test, y_pred))
+    rmse = sqrt(mean_squared_error(y_test, y_pred))
     r2 = r2_score(y_test, y_pred)
 
     st.subheader('📊 Skor Evaluasi')
