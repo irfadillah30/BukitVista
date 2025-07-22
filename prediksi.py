@@ -10,6 +10,7 @@ def prediction():
     data, location_encoder, lokasi_list = load_data()
     model, X_test, y_test, X = train_model()
 
+
     guests = st.slider('Jumlah Tamu', 1, 16, 2)
     bedrooms = st.slider('Jumlah Kamar Tidur', 1, 10, 1)
     beds = st.slider('Jumlah Tempat Tidur', 1, 15, 1)
@@ -17,7 +18,6 @@ def prediction():
     lokasi_encoded = location_encoder.transform([lokasi])[0]
 
     input_data = np.array([[guests, bedrooms, beds, lokasi_encoded]])
-
     prediksi_harga = model.predict(input_data)
 
     st.subheader('Prediksi Harga')
