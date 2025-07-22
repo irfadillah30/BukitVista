@@ -1,4 +1,5 @@
 import joblib
+import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import mean_squared_error, r2_score
@@ -9,7 +10,10 @@ from data_loader import load_data
 def train_model():
     data, location_encoder = load_data()
 
-    # Tangani missing values di fitur dan target
+    # Pastikan kolom Harga numerik, ubah yang tidak bisa jadi NaN
+    data['Harga'] = pd.to_numeric(data['Harga'], errors='coerce')
+
+    # Buang baris yang ada NaN di fitur atau target
     data = data.dropna(subset=['Jumlah Tamu', 'Jumlah Kamar Tidur', 'Jumlah Tempat Tidur', 'Lokasi Encoded', 'Harga'])
 
     X = data[['Jumlah Tamu', 'Jumlah Kamar Tidur', 'Jumlah Tempat Tidur', 'Lokasi Encoded']]
