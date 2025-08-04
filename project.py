@@ -111,4 +111,3 @@ def project():
 
     st.markdown("---")
     st.markdown("by : Irfadillah Afni Nurvita")
-
