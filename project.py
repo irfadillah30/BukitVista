@@ -74,12 +74,11 @@ def project():
     #   DASHBOARD INTERAKTIF 
     st.markdown("## ⏳ Filter Vila dan Hasil")
 
-    col_filter, col_result = st.columns([4, 3])
+    col_filter, col_result = st.columns([4, 5])
     lokasi_options = df['Source_Location'].unique()
     lokasi_options.sort()
 
     with col_filter:
-        st.markdown("## ⏳ Filter Vila")
         selected_lokasi = st.selectbox("📍 Lokasi", ['Semua'] + sorted(lokasi_options.tolist()))
         selected_kamar = st.slider("🛌 Jumlah Kamar Tidur", kamar_min, kamar_max, (kamar_min, kamar_max))
         selected_tamu = st.slider("👤 Jumlah Tamu", tamu_min, tamu_max, (tamu_min, tamu_max))
@@ -98,12 +97,12 @@ def project():
 
     # Kolom kanan untuk hasil dan chart
     with col_result:
-        st.markdown(f"#### Menampilkan {len(df_filtered)} vila berdasarkan filter")
+        st.markdown(f"## Menampilkan {len(df_filtered)} vila berdasarkan filter")
 
         if len(df_filtered) == 0:
             st.warning("Maaf, tidak ada vila yang sesuai dengan filter. Silakan coba ubah jumlah tamu, kamar, atau lokasi.")
         else:
-            st.subheader("📍 Jumlah Vila per Lokasi")
+            st.markdown("📍 Jumlah Vila per Lokasi")
             jumlah_vila = df_filtered['Source_Location'].value_counts().sort_values(ascending=True)
 
             fig4, ax4 = plt.subplots(figsize=(10, 6))
