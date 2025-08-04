@@ -62,7 +62,7 @@ def project():
         sns.regplot(x='Jumlah Kamar Tidur', y='Harga', data=df, scatter=False, color='red', ax=ax2)
         ax2.set_title('Jumlah Kamar Tidur vs Harga')
         st.pyplot(fig2)
-
+        
     with col3:
         st.markdown(f"# 👤 Jumlah Tamu vs Harga")
         fig3, ax3 = plt.subplots(figsize=(6, 5))
