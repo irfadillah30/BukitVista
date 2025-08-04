@@ -5,6 +5,16 @@ from sklearn.metrics import mean_squared_error, r2_score
 from math import sqrt
 from data_loader import load_data
 
+st.markdown("""
+    <style>
+    .stButton > button {
+        background-color: #d9534f;
+        color: white;
+        font-weight: bold;
+    }
+    </style>
+""", unsafe_allow_html=True)
+
 def prediction():
     st.title('Prediksi Harga Vila di Bali')
 
@@ -26,7 +36,7 @@ def prediction():
     lokasi_encoded = location_encoder.transform([lokasi])[0]
 
      # Tombol untuk prediksi
-    if st.button('🔍 Prediksi Sekarang'):
+    if st.button('Prediksi'):
         input_data = np.array([[guests, bedrooms, beds, lokasi_encoded]])
         prediksi_harga = model.predict(input_data)
 
@@ -34,15 +44,6 @@ def prediction():
         harga_formatted = f"¥{int(round(prediksi_harga[0])):,}".replace(',', '.')
         st.success(harga_formatted)
 
-        # Evaluasi model (optional)
-        y_pred = model.predict(X_test)
-        rmse = sqrt(mean_squared_error(y_test, y_pred))
-        r2 = r2_score(y_test, y_pred)
 
-        st.subheader('📊 Evaluasi Model')
-        st.write(f'RMSE: {rmse:,.2f}')
-        st.write(f'R²: {r2:.2f}')
-
-
-    if __name__ == "__main__":
+if __name__ == "__main__":
     prediction()
