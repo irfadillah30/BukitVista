@@ -80,17 +80,11 @@ def project():
 
     with col_filter:
         st.markdown("## ⏳ Filter Vila")
+        selected_lokasi = st.selectbox("📍 Lokasi", ['Semua'] + sorted(lokasi_options.tolist()))
+        selected_kamar = st.slider("🛌 Jumlah Kamar Tidur", kamar_min, kamar_max, (kamar_min, kamar_max))
+        selected_tamu = st.slider("👤 Jumlah Tamu", tamu_min, tamu_max, (tamu_min, tamu_max))
 
-        # Filter dalam 3 kolom di kolom filter
-        c1, c2, c3 = st.columns(3)
-        with c1:
-            selected_lokasi = st.selectbox("📍 Lokasi", ['Semua'] + sorted(lokasi_options.tolist()))
-        with c2:
-            selected_kamar = st.slider("🛌 Jumlah Kamar Tidur", kamar_min, kamar_max, (kamar_min, kamar_max))
-        with c3:
-            selected_tamu = st.slider("👤 Jumlah Tamu", tamu_min, tamu_max, (tamu_min, tamu_max))
-
-    # Filter data
+    # Filter data berdasarkan pilihan user
     df_filtered = df.copy()
     if selected_lokasi != 'Semua':
         df_filtered = df_filtered[df_filtered['Source_Location'] == selected_lokasi]
@@ -102,6 +96,7 @@ def project():
         (df_filtered['Jumlah Tamu'] <= selected_tamu[1])
     ]
 
+    # Kolom kanan untuk hasil dan chart
     with col_result:
         st.markdown(f"#### Menampilkan {len(df_filtered)} vila berdasarkan filter")
 
@@ -111,7 +106,7 @@ def project():
             st.subheader("📍 Jumlah Vila per Lokasi")
             jumlah_vila = df_filtered['Source_Location'].value_counts().sort_values(ascending=True)
 
-            fig4, ax4 = plt.subplots(figsize=(8, 6))
+            fig4, ax4 = plt.subplots(figsize=(10, 6))
             jumlah_vila.plot(kind='barh', color='cornflowerblue', ax=ax4)
 
             for i, v in enumerate(jumlah_vila):
