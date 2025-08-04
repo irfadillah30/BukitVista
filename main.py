@@ -1,33 +1,46 @@
 import streamlit as st
 
 st.set_page_config(layout='wide')
+
 st.markdown(
     """
     <style>
-    .container-flex {
-        display: flex;
-        align-items: center;
-        gap: 1rem;
+    .logo-container {
+        text-align: center;
+        margin-bottom: 10px;
     }
-    .container-flex h1 {
-        font-size: 2rem;  /* kecilkan font judul supaya nggak terlalu besar */
-        margin: 0;
+    .judul-container {
+        text-align: center;
+        font-size: 3.5rem;  /* Ukuran font lebih besar */
+        font-weight: bold;
+        margin-top: 0;
+        margin-bottom: 20px;
     }
     </style>
     """,
     unsafe_allow_html=True,
 )
+
 st.markdown(
     """
-    <div class="container-flex">
-        <h1>Analisis Fasilitas & Lokasi dengan Machine Learning</h1>
-        <img src="https://www.bukitvista.com/wp-content/uploads/2021/06/BukitVista-LOGO-ONLY-transparent.png" width="100" />
+    <div class="logo-container">
+        <img src="https://www.bukitvista.com/wp-content/uploads/2021/06/BukitVista-LOGO-ONLY-transparent.png" width="300" />
     </div>
     """,
     unsafe_allow_html=True,
 )
+
+st.markdown(
+    """
+    <div class="judul-container">
+        Analisis Fasilitas & Lokasi dengan Machine Learning
+    </div>
+    """,
+    unsafe_allow_html=True,
+)
+
 page = st.radio(
-    ' ',
+    '',
     ['Tentang saya', 'Proyek', 'Prediksi', 'Kontak'],
     horizontal=True
 )
