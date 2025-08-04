@@ -108,7 +108,7 @@ def project():
 
         # angka di setiap bar
         for i, v in enumerate(jumlah_vila):
-            ax4.text(v + 0.1, i, str(v), color='blue', va='center', fontweight='bold')
+            ax4.text(v + 0.1, i, str(v), color='black', va='center')
 
         ax4.set_xlabel('Jumlah Vila')
         ax4.set_title('Jumlah Vila per Lokasi (Setelah Filter)')
