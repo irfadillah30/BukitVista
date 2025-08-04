@@ -43,10 +43,11 @@ def project():
     kamar_min, kamar_max = int(df['Jumlah Kamar Tidur'].min()), int(df['Jumlah Kamar Tidur'].max())
 
     # visualisasi
+    st.markdown("## Visualisasi Data") 
     col1, col2, col3 = st.columns(3)
 
     with col1:
-        st.markdown("🛏️ Tempat Tidur vs Harga")
+        st.markdown(f"## 🛏️ Tempat Tidur vs Harga")
         fig1, ax1 = plt.subplots(figsize=(6, 5))
         sns.scatterplot(x='Jumlah Tempat Tidur', y='Harga', data=df, color='teal', alpha=0.6, ax=ax1)
         sns.regplot(x='Jumlah Tempat Tidur', y='Harga', data=df, scatter=False, color='red', ax=ax1)
@@ -54,7 +55,7 @@ def project():
         st.pyplot(fig1)
 
     with col2:
-        st.markdown("🛏️ Kamar Tidur vs Harga")
+        st.markdown(f"## 🛏️ Kamar Tidur vs Harga")
         fig2, ax2 = plt.subplots(figsize=(6, 5))
         sns.scatterplot(x='Jumlah Kamar Tidur', y='Harga', data=df, color='purple', alpha=0.6, ax=ax2)
         sns.regplot(x='Jumlah Kamar Tidur', y='Harga', data=df, scatter=False, color='red', ax=ax2)
@@ -62,7 +63,7 @@ def project():
         st.pyplot(fig2)
 
     with col3:
-        st.markdown("👤 Jumlah Tamu vs Harga")
+        st.markdown(f"## 👤 Jumlah Tamu vs Harga")
         fig3, ax3 = plt.subplots(figsize=(6, 5))
         sns.scatterplot(x='Jumlah Tamu', y='Harga', data=df, color='orange', alpha=0.6, ax=ax3)
         sns.regplot(x='Jumlah Tamu', y='Harga', data=df, scatter=False, color='red', ax=ax3)
