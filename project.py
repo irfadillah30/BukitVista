@@ -100,12 +100,16 @@ def project():
     if len(df_filtered) == 0:
         st.warning("Maaf, tidak ada vila yang sesuai dengan filter. Silakan coba ubah jumlah tamu, kamar, atau lokasi.")
     else:
-    # Bar Chart Jumlah Vila per Lokasi
         st.subheader("📍 Jumlah Vila per Lokasi")
         jumlah_vila = df_filtered['Source_Location'].value_counts().sort_values(ascending=True)
 
-        fig4, ax4 = plt.subplots(figsize=(10, 6))
+        fig4, ax4 = plt.subplots(figsize=(8, 6))
         jumlah_vila.plot(kind='barh', color='cornflowerblue', ax=ax4)
+
+        # angka di setiap bar
+        for i, v in enumerate(jumlah_vila):
+            ax4.text(v + 0.1, i, str(v), color='blue', va='center', fontweight='bold')
+
         ax4.set_xlabel('Jumlah Vila')
         ax4.set_title('Jumlah Vila per Lokasi (Setelah Filter)')
         ax4.grid(axis='x', linestyle='--', alpha=0.5)
