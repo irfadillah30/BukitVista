@@ -42,29 +42,32 @@ def project():
     tamu_min, tamu_max = int(df['Jumlah Tamu'].min()), int(df['Jumlah Tamu'].max())
     kamar_min, kamar_max = int(df['Jumlah Kamar Tidur'].min()), int(df['Jumlah Kamar Tidur'].max())
 
-    # ---------------------- 📈 VISUALISASI 1 --------------------------
-    st.header("🛏️ Tempat Tidur vs Harga")
-    fig1, ax1 = plt.subplots(figsize=(10, 6))
-    sns.scatterplot(x='Jumlah Tempat Tidur', y='Harga', data=df, color='teal', alpha=0.6, ax=ax1)
-    sns.regplot(x='Jumlah Tempat Tidur', y='Harga', data=df, scatter=False, color='red', ax=ax1)
-    ax1.set_title('Jumlah Tempat Tidur vs Harga')
-    st.pyplot(fig1)
+    # visualisasi
+    col1, col2, col3 = st.columns(3)
 
-    # VISUALISASI 2 
-    st.header("🛏️ Kamar Tidur vs Harga")
-    fig2, ax2 = plt.subplots(figsize=(10, 6))
-    sns.scatterplot(x='Jumlah Kamar Tidur', y='Harga', data=df, color='purple', alpha=0.6, ax=ax2)
-    sns.regplot(x='Jumlah Kamar Tidur', y='Harga', data=df, scatter=False, color='red', ax=ax2)
-    ax2.set_title('Jumlah Kamar Tidur vs Harga')
-    st.pyplot(fig2)
+    with col1:
+        st.header("🛏️ Tempat Tidur vs Harga")
+        fig1, ax1 = plt.subplots(figsize=(6, 5))
+        sns.scatterplot(x='Jumlah Tempat Tidur', y='Harga', data=df, color='teal', alpha=0.6, ax=ax1)
+        sns.regplot(x='Jumlah Tempat Tidur', y='Harga', data=df, scatter=False, color='red', ax=ax1)
+        ax1.set_title('Jumlah Tempat Tidur vs Harga')
+        st.pyplot(fig1)
 
-    # VISUALISASI 3 
-    st.header("👤 Jumlah Tamu vs Harga")
-    fig3, ax3 = plt.subplots(figsize=(10, 6))
-    sns.scatterplot(x='Jumlah Tamu', y='Harga', data=df, color='orange', alpha=0.6, ax=ax3)
-    sns.regplot(x='Jumlah Tamu', y='Harga', data=df, scatter=False, color='red', ax=ax3)
-    ax3.set_title('Jumlah Tamu vs Harga')
-    st.pyplot(fig3)
+    with col2:
+        st.header("🛏️ Kamar Tidur vs Harga")
+        fig2, ax2 = plt.subplots(figsize=(6, 5))
+        sns.scatterplot(x='Jumlah Kamar Tidur', y='Harga', data=df, color='purple', alpha=0.6, ax=ax2)
+        sns.regplot(x='Jumlah Kamar Tidur', y='Harga', data=df, scatter=False, color='red', ax=ax2)
+        ax2.set_title('Jumlah Kamar Tidur vs Harga')
+        st.pyplot(fig2)
+
+    with col3:
+        st.header("👤 Jumlah Tamu vs Harga")
+        fig3, ax3 = plt.subplots(figsize=(6, 5))
+        sns.scatterplot(x='Jumlah Tamu', y='Harga', data=df, color='orange', alpha=0.6, ax=ax3)
+        sns.regplot(x='Jumlah Tamu', y='Harga', data=df, scatter=False, color='red', ax=ax3)
+        ax3.set_title('Jumlah Tamu vs Harga')
+        st.pyplot(fig3)
 
     #   DASHBOARD INTERAKTIF 
     st.markdown("## ⏳ Filter Vila")
