@@ -1,7 +1,7 @@
 import streamlit as st
 
 st.set_page_config(layout='wide')
-col1, col2 = st.columns([4, 1]) 
+col1, col2 = st.columns([2, 2]) 
 with col1:
     st.title('Analisis Fasilitas & Lokasi dengan Machine Learning')
 with col2:
