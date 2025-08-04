@@ -1,11 +1,31 @@
 import streamlit as st
 
 st.set_page_config(layout='wide')
-col1, col2 = st.columns([2, 2]) 
-with col1:
-    st.title('Analisis Fasilitas & Lokasi dengan Machine Learning')
-with col2:
-    st.image('https://www.bukitvista.com/wp-content/uploads/2021/06/BukitVista-LOGO-ONLY-transparent.png', width=120)
+st.markdown(
+    """
+    <style>
+    .container-flex {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+    .container-flex h1 {
+        font-size: 2rem;  /* kecilkan font judul supaya nggak terlalu besar */
+        margin: 0;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
+st.markdown(
+    """
+    <div class="container-flex">
+        <h1>Analisis Fasilitas & Lokasi dengan Machine Learning</h1>
+        <img src="https://www.bukitvista.com/wp-content/uploads/2021/06/BukitVista-LOGO-ONLY-transparent.png" width="100" />
+    </div>
+    """,
+    unsafe_allow_html=True,
+)
 page = st.radio(
     ' ',
     ['Tentang saya', 'Proyek', 'Prediksi', 'Kontak'],
