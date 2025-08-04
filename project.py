@@ -21,10 +21,12 @@ def project():
 
     df = pd.read_csv("Daftar_vila_Dibali_Bukit_Vista_Cleaned.csv")
 
+    # Bersihkan dan ubah kolom Harga ke numeric
     df['Harga'] = df['Harga'].astype(str)
     df['Harga'] = df['Harga'].str.replace('¥', '', regex=False).str.replace('.', '', regex=False).str.strip()
     df['Harga'] = df['Harga'].replace('', np.nan).astype(float)
     df['Harga'] = df['Harga'].fillna(df['Harga'].median()).astype(int)
+
     df['Minimum menginap'] = pd.to_numeric(df['Minimum menginap'], errors='coerce')
 
     facilities = df['Fasilitas'].apply(extract_facilities)
@@ -32,48 +34,81 @@ def project():
     df['Jumlah Kamar Tidur'] = facilities.apply(lambda x: x[1])
     df['Jumlah Tempat Tidur'] = facilities.apply(lambda x: x[2])
 
-    # Filter lokasi
-    st.subheader("Filter Data  ")
-    lokasi_terpilih = st.multiselect(
-        "Pilih Lokasi", options=df['Source_Location'].unique(), default=list(df['Source_Location'].unique())
-    )
+    # Ganti 0 dengan 1 agar slider tidak error
+    df['Jumlah Tamu'] = df['Jumlah Tamu'].replace(0, 1)
+    df['Jumlah Kamar Tidur'] = df['Jumlah Kamar Tidur'].replace(0, 1)
 
-    # Metric Summary
-    col1, col2, col3 = st.columns(3)
-    col1.metric("Rata-rata Harga", f"¥{int(df['Harga'].mean()):,}".replace(',', '.'))
-    col2.metric("Jumlah Vila", len(df))
-    col3.metric("Rata-rata Tamu", round(df['Jumlah Tamu'].mean(), 1))
+    # Nilai min dan max slider
+    tamu_min, tamu_max = int(df['Jumlah Tamu'].min()), int(df['Jumlah Tamu'].max())
+    kamar_min, kamar_max = int(df['Jumlah Kamar Tidur'].min()), int(df['Jumlah Kamar Tidur'].max())
 
-    st.markdown("---")
-
-    # Visualisasi Harga
-    st.subheader("📈 Distribusi Harga Vila")
+    # ---------------------- 📈 VISUALISASI 1 --------------------------
+    st.header("🛏️ Tempat Tidur vs Harga")
     fig1, ax1 = plt.subplots(figsize=(10, 6))
-    sns.histplot(df['Harga'], bins=30, kde=True, color='skyblue', ax=ax1)
-    ax1.set_title('Distribusi Harga Vila')
+    sns.scatterplot(x='Jumlah Tempat Tidur', y='Harga', data=df, color='teal', alpha=0.6, ax=ax1)
+    sns.regplot(x='Jumlah Tempat Tidur', y='Harga', data=df, scatter=False, color='red', ax=ax1)
+    ax1.set_title('Jumlah Tempat Tidur vs Harga')
     st.pyplot(fig1)
 
-    # Harga per Lokasi
-    st.subheader("📍 Harga Berdasarkan Lokasi")
-    order = df.groupby('Source_Location')['Harga'].mean().sort_values().index
-    fig2, ax2 = plt.subplots(figsize=(12, 6))
-    sns.boxplot(x='Source_Location', y='Harga', data=df, order=order, palette='viridis', ax=ax2)
-    ax2.set_title('Harga per Lokasi')
-    ax2.tick_params(axis='x', rotation=45)
+    # VISUALISASI 2 
+    st.header("🛏️ Kamar Tidur vs Harga")
+    fig2, ax2 = plt.subplots(figsize=(10, 6))
+    sns.scatterplot(x='Jumlah Kamar Tidur', y='Harga', data=df, color='purple', alpha=0.6, ax=ax2)
+    sns.regplot(x='Jumlah Kamar Tidur', y='Harga', data=df, scatter=False, color='red', ax=ax2)
+    ax2.set_title('Jumlah Kamar Tidur vs Harga')
     st.pyplot(fig2)
 
-    # Scatterplots Fitur
-    fitur_visual = {
-        "👥 Jumlah Tamu": 'Jumlah Tamu',
-        "🛏️ Kamar Tidur": 'Jumlah Kamar Tidur',
-        "🛌 Tempat Tidur": 'Jumlah Tempat Tidur'
-    }
+    # VISUALISASI 3 
+    st.header("👤 Jumlah Tamu vs Harga")
+    fig3, ax3 = plt.subplots(figsize=(10, 6))
+    sns.scatterplot(x='Jumlah Tamu', y='Harga', data=df, color='orange', alpha=0.6, ax=ax3)
+    sns.regplot(x='Jumlah Tamu', y='Harga', data=df, scatter=False, color='red', ax=ax3)
+    ax3.set_title('Jumlah Tamu vs Harga')
+    st.pyplot(fig3)
 
-    for title, col in fitur_visual.items():
-        st.subheader(f"{title} vs Harga")
-        fig, ax = plt.subplots(figsize=(12, 6))
-        sns.scatterplot(x=col, y='Harga', data=df, alpha=0.6, s=100, edgecolor='gray', ax=ax)
-        sns.regplot(x=col, y='Harga', data=df, scatter=False, color='red', ax=ax)
-        st.pyplot(fig)
+    #   DASHBOARD INTERAKTIF 
+    st.markdown("## ⏳ Filter Vila")
 
-    st.caption("Sumber data: Bukit Vista | Disusun oleh Irfadillah Afni Nurvita")
+    col1, col2, col3 = st.columns(3)  # Sekarang hanya 3 kolom
+    lokasi_options = df['Source_Location'].unique()
+
+    with col1:
+        selected_lokasi = st.selectbox("📍 Lokasi", ['Semua'] + sorted(lokasi_options.tolist()))
+    with col2:
+        selected_kamar = st.slider("🛌 Jumlah Kamar Tidur", kamar_min, kamar_max, (kamar_min, kamar_max))
+    with col3:
+        selected_tamu = st.slider("👤 Jumlah Tamu", tamu_min, tamu_max, (tamu_min, tamu_max))
+
+    # Filter Data
+    df_filtered = df.copy()
+    if selected_lokasi != 'Semua':
+        df_filtered = df_filtered[df_filtered['Source_Location'] == selected_lokasi]
+
+    df_filtered = df_filtered[
+        (df_filtered['Jumlah Kamar Tidur'] >= selected_kamar[0]) &
+        (df_filtered['Jumlah Kamar Tidur'] <= selected_kamar[1]) &
+        (df_filtered['Jumlah Tamu'] >= selected_tamu[0]) &
+        (df_filtered['Jumlah Tamu'] <= selected_tamu[1])
+    ]
+    st.markdown(f"#### Menampilkan {len(df_filtered)} vila berdasarkan filter")
+
+    if len(df_filtered) == 0:
+        st.warning("Maaf, tidak ada vila yang sesuai dengan filter. Silakan coba ubah jumlah tamu, kamar, atau lokasi.")
+    else:
+    # Bar Chart Jumlah Vila per Lokasi
+        st.subheader("📍 Jumlah Vila per Lokasi")
+        jumlah_vila = df_filtered['Source_Location'].value_counts().sort_values(ascending=True)
+
+        fig4, ax4 = plt.subplots(figsize=(10, 6))
+        jumlah_vila.plot(kind='barh', color='cornflowerblue', ax=ax4)
+        ax4.set_xlabel('Jumlah Vila')
+        ax4.set_title('Jumlah Vila per Lokasi (Setelah Filter)')
+        ax4.grid(axis='x', linestyle='--', alpha=0.5)
+        st.pyplot(fig4)
+
+
+
+
+    st.markdown("---")
+    st.markdown("by : Irfadillah Afni Nurvita")
+

@@ -36,12 +36,12 @@ def prediction():
     lokasi_encoded = location_encoder.transform([lokasi])[0]
 
      # Tombol untuk prediksi
-    if st.button('Prediksi'):
+    if st.button('Prediksi 🔎'):
         input_data = np.array([[guests, bedrooms, beds, lokasi_encoded]])
         prediksi_harga = model.predict(input_data)
 
-        st.subheader('💰 Prediksi Harga')
-        harga_formatted = f"¥{int(round(prediksi_harga[0])):,}".replace(',', '.')
+        st.subheader('Prediksi Harga 💴 ')
+        harga_formatted = f"{int(round(prediksi_harga[0])):,} ¥".replace(',', '.')
         st.success(harga_formatted)
 
 
