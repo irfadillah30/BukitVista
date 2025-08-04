@@ -72,50 +72,47 @@ def project():
         st.pyplot(fig3)
 
     #   DASHBOARD INTERAKTIF 
-    st.markdown("## ⏳ Filter Vila")
+    st.markdown("## ⏳ Filter Vila dan Hasil")
 
-    col1, col2, col3 = st.columns(3)  # Sekarang hanya 3 kolom
-    lokasi_options = df['Source_Location'].unique()
+    # Buat dua kolom: kiri filter, kanan hasil
+    col_filter, col_hasil = st.columns([3, 3])  
 
-    with col1:
+    with col_filter:
+        lokasi_options = df['Source_Location'].unique()
         selected_lokasi = st.selectbox("📍 Lokasi", ['Semua'] + sorted(lokasi_options.tolist()))
-    with col2:
         selected_kamar = st.slider("🛌 Jumlah Kamar Tidur", kamar_min, kamar_max, (kamar_min, kamar_max))
-    with col3:
         selected_tamu = st.slider("👤 Jumlah Tamu", tamu_min, tamu_max, (tamu_min, tamu_max))
 
-    # Filter Data
+    # Filter data sesuai input
     df_filtered = df.copy()
     if selected_lokasi != 'Semua':
         df_filtered = df_filtered[df_filtered['Source_Location'] == selected_lokasi]
-
     df_filtered = df_filtered[
         (df_filtered['Jumlah Kamar Tidur'] >= selected_kamar[0]) &
         (df_filtered['Jumlah Kamar Tidur'] <= selected_kamar[1]) &
         (df_filtered['Jumlah Tamu'] >= selected_tamu[0]) &
         (df_filtered['Jumlah Tamu'] <= selected_tamu[1])
     ]
-    st.markdown(f"#### Menampilkan {len(df_filtered)} vila berdasarkan filter")
 
-    if len(df_filtered) == 0:
-        st.warning("Maaf, tidak ada vila yang sesuai dengan filter. Silakan coba ubah jumlah tamu, kamar, atau lokasi.")
-    else:
-        st.subheader("📍 Jumlah Vila per Lokasi")
-        jumlah_vila = df_filtered['Source_Location'].value_counts().sort_values(ascending=True)
+    with col_hasil:
+        st.markdown(f"#### Menampilkan {len(df_filtered)} vila berdasarkan filter")
+        if len(df_filtered) == 0:
+            st.warning("Maaf, tidak ada vila yang sesuai dengan filter. Silakan coba ubah filter.")
+        else:
+            st.subheader("📋 Daftar Vila")
+            st.dataframe(df_filtered[['Nama vila', 'Source_Location', 'Jumlah Kamar Tidur', 'Jumlah Tamu', 'Harga']])
 
-        fig4, ax4 = plt.subplots(figsize=(8, 6))
-        jumlah_vila.plot(kind='barh', color='cornflowerblue', ax=ax4)
+            st.subheader("📍 Jumlah Vila per Lokasi")
+            jumlah_vila = df_filtered['Source_Location'].value_counts().sort_values(ascending=True)
 
-        # angka di setiap bar
-        for i, v in enumerate(jumlah_vila):
-            ax4.text(v + 0.1, i, str(v), color='black', va='center')
-
-        ax4.set_xlabel('Jumlah Vila')
-        ax4.set_title('Jumlah Vila per Lokasi (Setelah Filter)')
-        ax4.grid(axis='x', linestyle='--', alpha=0.5)
-        st.pyplot(fig4)
-
-
+            fig4, ax4 = plt.subplots(figsize=(10, 6))
+            jumlah_vila.plot(kind='barh', color='cornflowerblue', ax=ax4)
+            for i, v in enumerate(jumlah_vila):
+                ax4.text(v + 0.1, i, str(v), color='blue', va='center', fontweight='bold')
+            ax4.set_xlabel('Jumlah Vila')
+            ax4.set_title('Jumlah Vila per Lokasi (Setelah Filter)')
+            ax4.grid(axis='x', linestyle='--', alpha=0.5)
+            st.pyplot(fig4)
 
 
     st.markdown("---")
