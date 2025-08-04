@@ -74,7 +74,9 @@ def project():
     #   DASHBOARD INTERAKTIF 
     st.markdown("## ⏳ Filter Vila dan Hasil")
 
-    col_filter, col_result = st.columns([1, 3]) 
+    col_filter, col_result = st.columns([1, 3])
+    lokasi_options = df['Source_Location'].unique()
+    lokasi_options.sort()
 
     with col_filter:
         st.markdown("## ⏳ Filter Vila")
