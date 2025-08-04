@@ -97,7 +97,7 @@ def project():
 
     # Kolom kanan untuk hasil dan chart
     with col_result:
-        st.markdown(f"## Menampilkan {len(df_filtered)} vila berdasarkan filter")
+        st.markdown(f"Menampilkan {len(df_filtered)} vila berdasarkan filter")
 
         if len(df_filtered) == 0:
             st.warning("Maaf, tidak ada vila yang sesuai dengan filter. Silakan coba ubah jumlah tamu, kamar, atau lokasi.")
